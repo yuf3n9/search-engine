@@ -2,7 +2,7 @@ class Inverter(object):
 	"""docstring for Inverter"""
 	def __init__(self, path):
 		self.path = path
-		self.index = None
+		self.index = []
 		self.index_builder()
 
 		
@@ -32,4 +32,3 @@ class Inverter(object):
 		:rtype: List[str] - a list of ranked URLs
 		'''
 
-		
