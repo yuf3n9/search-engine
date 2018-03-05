@@ -2,7 +2,7 @@ import os
 from word_frequencies import Text
 import json
 from collections import defaultdict
-import math
+import tf_idf as ti
 
 class Inverter(object):
 	"""docstring for Inverter"""
@@ -36,30 +36,10 @@ class Inverter(object):
 							self.index[token[0]].append(posting)
 		for term in self.index.values():
 			for posting in term:
-				posting.append(self.tf_idf_score(len(posting[1]), N, len(term)))
+				posting.append(ti.tf_idf_score(len(posting[1]), N, len(term)))
 		self.index[78] = N # ord('N') == 78 :D  should not be conflict there
 		#print(json.dumps(self.index))
 		
-
-	def tf_weight(self, tf):
-		#type tf: int
-		#return tf weight
-		return 0 if not tf else 1 + math.log10(tf)
-
-
-	def idf_weight(self, N, df):
-		#type term: str
-		#return idf weight
-		return math.log10(N/df)
-
-
-	def tf_idf_score(self, tf, N, df):
-		'''
-		:type query: List[str] - a list of terms
-		return tf_idf_score
-		'''
-		return self.tf_weight(tf) * self.idf_weight(N, df)
-
 
 	def write2json(self):
 		with open('index.json', 'w') as f:
