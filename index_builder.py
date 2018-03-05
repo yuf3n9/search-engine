@@ -37,7 +37,7 @@ class Inverter(object):
 		for term in self.index.values():
 			for posting in term:
 				posting.append(self.tf_idf_score(len(posting[1]), N, len(term)))
-		print(json.dumps(self.index))
+		#print(json.dumps(self.index))
 		
 
 	def tf_weight(self, tf):
@@ -61,7 +61,8 @@ class Inverter(object):
 
 
 	def write2json(self):
-		pass
+		with open('index.json', 'w') as f:
+			f.write(json.dumps(self.index))
 
 
 
