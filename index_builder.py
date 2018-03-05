@@ -37,6 +37,7 @@ class Inverter(object):
 		for term in self.index.values():
 			for posting in term:
 				posting.append(self.tf_idf_score(len(posting[1]), N, len(term)))
+		self.index[78] = N # ord('N') == 78 :D  should not be conflict there
 		#print(json.dumps(self.index))
 		
 
