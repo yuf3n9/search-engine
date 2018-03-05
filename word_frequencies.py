@@ -1,6 +1,7 @@
 import fire
 import re
 from collections import Counter
+from collections import defaultdict
 
 class Text:
 	def __init__(self, path):
@@ -13,6 +14,12 @@ class Text:
 
 	def computeWordFrequencies(self):
 		return Counter(self.tokenize())
+
+	def wordPosition(self):
+		d=defaultdict(list)
+		for i,token in enumerate(self.tokenize()):
+			d[token].append(i)
+		return d
 
 	def printFrequencies(self):
 		for item in self.computeWordFrequencies().most_common():
