@@ -11,14 +11,13 @@ class Inverter(object):
 			json_str = f.read()
 			self.bookkeeping = json.loads(json_str)
 		self.path = path
-		self.index = []
+		self.index = defaultdict(list)
 		self.index_builder()
 		self.write2json()
 
 		
 	def index_builder(self):
 		#build Inverted Index, do not return anything
-		terms = defaultdict(list)
 		dirlist = os.listdir(self.path)
 		N = 0
 		for i in dirlist:
@@ -31,13 +30,14 @@ class Inverter(object):
 						N += 1
 						tokens = Text(filepath).wordPosition()
 						for token in tokens.items():
-							post = []
-							post.append(i + '/' + file)#self.bookkeeping[i + '/' + file]
-							post.append(token[1])
-							terms[token[0]].append(post)
-
-		print(json.dumps(terms))
-		#print(os.path.walk(self.path))
+							posting = []
+							posting.append(i + '/' + file)#self.bookkeeping[i + '/' + file]
+							posting.append(token[1]) # positions
+							self.index[token[0]].append(posting)
+		for term in self.index.values():
+			for posting in term:
+				posting.append(self.tf_idf_score(len(posting[1]), N, len(term)))
+		print(json.dumps(self.index))
 		
 
 	def tf_weight(self, tf):
@@ -52,23 +52,18 @@ class Inverter(object):
 		return math.log10(N/df)
 
 
-	def tf_idf_score(self, query, doc):
+	def tf_idf_score(self, tf, N, df):
 		'''
 		:type query: List[str] - a list of terms
 		return tf_idf_score
 		'''
-		pass
+		return self.tf_weight(tf) * self.idf_weight(N, df)
 
 
 	def write2json(self):
 		pass
 
 
-	def query(self, key_words):
-		'''
-		:type key_words: List[str]
-		:rtype: List[str] - a list of ranked URLs
-		'''
 
 if __name__ == '__main__':
 	path = 'WEBPAGES_CLEAN'
