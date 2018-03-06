@@ -7,14 +7,19 @@ def tf_weight(tf):
 
 
 def idf_weight(N, df):
-	#type term: str
-	#return idf weight
+	'''
+	:type df: int
+	:type N: int
+	return idf weight
+	'''
 	return math.log10(N/df)
 
 
 def tf_idf_score(tf, N, df):
 	'''
-	:type query: List[str] - a list of terms
+	#type tf: int
+	:type df: int
+	:type N: int
 	return tf_idf_score
 	'''
 	return tf_weight(tf) * idf_weight(N, df)
