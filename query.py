@@ -7,6 +7,8 @@ import heapq
 
 class search_engine():
 	def __init__(self):
+		with open('index.json', 'r') as f:
+			self.index = json.loads(f.read())
 		path = 'WEBPAGES_CLEAN'
 		with open(path + '/bookkeeping.json', 'r') as f:
 			json_str = f.read()
@@ -27,16 +29,14 @@ class search_engine():
 		return self.bookkeeping[docID]
 
 	def query(self, string):
-		with open('index.json', 'r') as f:
-			index = json.loads(f.read())
 		keywords = Text(None, string).computeWordFrequencies()
 		L = len(keywords)
 		query_score = 1
 		query_vec = [0] * len(keywords)
 		hits = {}
 		for i, keyword in enumerate(keywords.items()):
-			query_vec[i] = ti.tf_idf_score(keyword[1], index['__N__'], len(index[keyword[0]]))
-			for posting in index[keyword[0]]:
+			query_vec[i] = ti.tf_idf_score(keyword[1], self.index['__N__'], len(self.index[keyword[0]]))
+			for posting in self.index[keyword[0]]:
 				hits.setdefault(posting[0], [0] * len(keywords))
 				hits[posting[0]][i] = float(posting[2])
 		ranked_hits = heapq.nlargest(5, hits, key = lambda posting : self.cosine_similarity(query_vec, hits[posting]))
