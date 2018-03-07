@@ -35,10 +35,13 @@ class search_engine():
 		query_vec = [0] * len(keywords)
 		hits = {}
 		for i, keyword in enumerate(keywords.items()):
-			query_vec[i] = ti.tf_idf_score(keyword[1], self.index['__N__'], len(self.index[keyword[0]]))
-			for posting in self.index[keyword[0]]:
-				hits.setdefault(posting[0], [0] * len(keywords))
-				hits[posting[0]][i] = float(posting[2])
+			try:
+				query_vec[i] = ti.tf_idf_score(keyword[1], self.index['__N__'], len(self.index[keyword[0]]))
+				for posting in self.index[keyword[0]]:
+					hits.setdefault(posting[0], [0] * len(keywords))
+					hits[posting[0]][i] = float(posting[2])
+			except KeyError as e:
+				pass
 		ranked_hits = heapq.nlargest(5, hits, key = lambda posting : self.cosine_similarity(query_vec, hits[posting]))
 
 		return list(map(self.docID2URL, ranked_hits))
@@ -54,7 +57,10 @@ if __name__ == '__main__':
 			print('Type a query:')
 			query = input()
 			print()
-			print(se.query(query))
+			try:
+				print(se.query(query))
+			except Exception as e:
+				print('NOT FOUND.')
 			print()
 	except KeyboardInterrupt as e:
 		print('\nExit.')
