@@ -42,7 +42,8 @@ class search_engine():
 					hits[posting[0]][i] = float(posting[2])
 			except KeyError as e:
 				pass
-		ranked_hits = heapq.nlargest(5, hits, key = lambda posting : self.cosine_similarity(query_vec, hits[posting]))
+		#ranked_hits = heapq.nlargest(5, hits, key = lambda posting : self.cosine_similarity(query_vec, hits[posting]))
+		ranked_hits = heapq.nlargest(5, hits, key = lambda posting : sum(hits[posting]))
 
 		return list(map(self.docID2URL, ranked_hits))
 		'''h = []
@@ -57,10 +58,7 @@ if __name__ == '__main__':
 			print('Type a query:')
 			query = input()
 			print()
-			try:
-				print(se.query(query))
-			except Exception as e:
-				print('NOT FOUND.')
+			print(se.query(query))
 			print()
 	except KeyboardInterrupt as e:
 		print('\nExit.')
