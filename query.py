@@ -49,4 +49,15 @@ class search_engine():
 
 if __name__ == '__main__':
 	se = search_engine()
-	print(se.query(sys.argv[1]))
+	try:
+		while True:
+			print('Type a query:')
+			query = input()
+			print()
+			print(se.query(query))
+			print()
+	except KeyboardInterrupt as e:
+		print('\nExit.')
+	except Exception as e:
+		print(e)
+
