@@ -38,7 +38,6 @@ class Inverter(object):
 			for posting in term:
 				posting.append(ti.tf_idf_score(len(posting[1]), N, len(term)))
 		self.index['__N__'] = N
-		#print(json.dumps(self.index))
 		
 
 	def write2json(self):

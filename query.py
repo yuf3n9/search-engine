@@ -32,7 +32,6 @@ class search_engine():
 	def query(self, string):
 		keywords = Text(None, string).computeWordFrequencies()
 		L = len(keywords)
-		query_score = 1
 		query_vec = [0] * len(keywords)
 		hits = {}
 		snippet_position = defaultdict(list)
@@ -46,6 +45,8 @@ class search_engine():
 			except KeyError as e:
 				pass
 		#ranked_hits = heapq.nlargest(5, hits, key = lambda posting : self.cosine_similarity(query_vec, hits[posting]))
+
+		#add a score that is related to the closeness of the keywords
 		ranked_hits = heapq.nlargest(5, hits, key = lambda posting : sum(hits[posting]))
 		ranked_snippet_position = [snippet_position[hit] for hit in ranked_hits]
 		ranked_snippet = []
@@ -57,9 +58,6 @@ class search_engine():
 			ranked_snippet.append(snippet)
 
 		return list(map(self.docID2URL, ranked_hits)), ranked_snippet
-		'''h = []
-					for posting in hits.items():
-						heapq.heappush(h, (cosine_similarity(query_vec, posting[1]), posting[0]))'''
 
 
 if __name__ == '__main__':
