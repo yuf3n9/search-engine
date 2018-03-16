@@ -18,6 +18,7 @@ else:
     import urllib.request as urllib2
 
 class GoogleSearch:
+    #USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36"
     USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/ 58.0.3029.81 Safari/537.36"
     SEARCH_URL = "https://google.com/search"
     RESULT_SELECTOR = "h3.r a"
@@ -62,6 +63,7 @@ class GoogleSearch:
                     fetcher_thread = Thread(target=result.getText)
                     fetcher_thread.start()
                     fetcher_threads.append(fetcher_thread)
+            sleep(30)
         for thread in fetcher_threads:
             thread.join()
         return SearchResponse(searchResults, total);
