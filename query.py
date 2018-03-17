@@ -34,6 +34,7 @@ class search_engine():
 		return 1/(val**(0.5))
 
 	def proximity_score(self, positions):
+		N = 6
 		if len(positions) < 2:
 			return 0
 		h = []
@@ -41,8 +42,10 @@ class search_engine():
 			for position2 in sum(positions[i+1:],[]): # concat the lists
 				for position1 in pl:
 					heapq.heappush(h, abs(position1-position2))
-		proximity = heapq.nlargest(3, h)
+		proximity = heapq.nlargest(N, h)
 		score = list(map(self.inverse_sqrt, proximity))
+		if len(score) < N:
+			score += [0] * (N - len(score))
 		return statistics.mean(score)
 
 
