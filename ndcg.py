@@ -21,7 +21,7 @@ def dcg(gresults, myresults, perfect=False):
 			scores.append(0)
 	if perfect:
 		scores.sort(reverse=True)
-	discounted = [score/math.log2(i+1) if i != 0 else score for i,score in enumerate(scores)]
+	discounted = [score/math.log2(i+2) if i != 0 else float(score) for i,score in enumerate(scores)]
 	print(discounted)
 	return sum(discounted)
 
