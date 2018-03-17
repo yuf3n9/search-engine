@@ -15,7 +15,7 @@ def clean_url(url):
 	return ret if ret[-1] != '/' else ret[:-1]
 
 def google(keywords):
-	response = GoogleSearch().search(keywords + "site:ics.uci.edu", num_results = 100, prefetch_pages = False)
+	response = GoogleSearch().search(keywords + " site:ics.uci.edu", num_results = 100, prefetch_pages = False)
 	url = [result.url for result in response.results]
 	url = list(map(clean_url, url))
 
@@ -27,5 +27,5 @@ if __name__ == '__main__':
 	d={}
 	for keywords in query:
 		d[keywords] = google(keywords)
-		with open('gresults2.json', 'w') as f:
+		with open('gresults.json', 'w') as f:
 			f.write(json.dumps(d))
