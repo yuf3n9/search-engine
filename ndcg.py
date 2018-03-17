@@ -29,7 +29,7 @@ def ndcg(gresults, myresults):
 	try:
 		return dcg(gresults, myresults)/dcg(gresults, myresults, perfect=True)
 	except ZeroDivisionError as e:
-		return e
+		return 0.0
 	
 
 if __name__ == '__main__':
@@ -38,9 +38,11 @@ if __name__ == '__main__':
 	se = qry.search_engine()
 	with open('gresults.json', 'r') as f:
 		d = json.loads(f.read())
+	ndcg_sum = 0
 	for keywords in query:
 		g = d[keywords]
 		my = list(map(clean_url, se.query(keywords)[0]))
-		print(g)
-		print(my)
-		print(keywords + ': ' + str(ndcg(g, my)))
+		score = ndcg(g, my)
+		print(keywords + ': ' + str(score))
+		ndcg_sum += score
+	print(ndcg_sum)
