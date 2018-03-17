@@ -33,8 +33,7 @@ class search_engine():
 	def inverse_sqrt(self, val):
 		return 1/(val**(0.5))
 
-	def proximity_score(self, positions):
-		N = 6
+	def proximity_score(self, positions, N = 10):
 		if len(positions) < 2:
 			return 0
 		h = []
