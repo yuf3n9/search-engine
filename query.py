@@ -5,6 +5,7 @@ import sys
 import math
 import heapq
 from collections import defaultdict
+import statistics
 
 class search_engine():
 	def __init__(self):
@@ -29,12 +30,29 @@ class search_engine():
 	def docID2URL(self, docID):
 		return self.bookkeeping[docID]
 
+	def inverse_sqrt(self, val):
+		return 1/(val**(0.5))
+
+	def proximity_score(self, positions):
+		if len(positions) < 2:
+			return 0
+		h = []
+		for i, pl in enumerate(positions):
+			for position2 in sum(positions[i+1:],[]): # concat the lists
+				for position1 in pl:
+					heapq.heappush(h, abs(position1-position2))
+		proximity = heapq.nlargest(3, h)
+		score = list(map(self.inverse_sqrt, proximity))
+		return statistics.mean(score)
+
+
 	def query(self, string):
 		keywords = Text(None, string).computeWordFrequencies()
 		L = len(keywords)
 		query_vec = [0] * len(keywords)
 		hits = {}
 		snippet_position = defaultdict(list)
+		hits_position = defaultdict(list)
 		for i, keyword in enumerate(keywords.items()):
 			try:
 				query_vec[i] = ti.tf_idf_score(keyword[1], self.index['__N__'], len(self.index[keyword[0]]))
@@ -42,12 +60,17 @@ class search_engine():
 					hits.setdefault(posting[0], [0] * len(keywords))
 					hits[posting[0]][i] = float(posting[2])
 					snippet_position[posting[0]] = posting[1]
+					hits_position[posting[0]].append(posting[1])
 			except KeyError as e:
 				pass
-		#ranked_hits = heapq.nlargest(5, hits, key = lambda posting : self.cosine_similarity(query_vec, hits[posting]))
+		ranked_hits = heapq.nlargest(5, hits, key = lambda posting : self.cosine_similarity(query_vec, hits[posting])\
+						+ self.proximity_score(hits_position[posting]))
+
+		#for hit in ranked_hits:
+		#	print(hits[hit])
 
 		#add a score that is related to the closeness of the keywords
-		ranked_hits = heapq.nlargest(5, hits, key = lambda posting : sum(hits[posting]))
+		#ranked_hits = heapq.nlargest(5, hits, key = lambda posting : sum(hits[posting]))
 		ranked_snippet_position = [snippet_position[hit] for hit in ranked_hits]
 		ranked_snippet = []
 		for i, hit in enumerate(ranked_hits):
